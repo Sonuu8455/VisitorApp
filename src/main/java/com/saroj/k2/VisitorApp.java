@@ -24,7 +24,9 @@ public class VisitorApp {
 		
 //		dao.getAllValidVisitor().forEach(System.out::println);
 		
-		System.out.println(dao.deleteVisitorById(3));
+//		System.out.println(dao.deleteVisitorById(3));
+		
+		System.out.println(dao.visitorLogin("saroj@gmail.com", "saroj@123"));
 
 	}
 }

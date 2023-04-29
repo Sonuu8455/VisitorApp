@@ -35,7 +35,7 @@ public class VisitorDAOImp implements VisitorDAO {
 			int res1 = ps1.executeUpdate();
 
 			// for valid_visitor table
-			int res2=0;
+			int res2 = 0;
 			if (age >= 18) {
 				PreparedStatement ps2 = con.prepareStatement(validVisitorQuery);
 				ps2.setInt(1, visitor.getId());
@@ -53,7 +53,8 @@ public class VisitorDAOImp implements VisitorDAO {
 
 			con.close();
 
-			return res1 + " rows inserted to registered_visitor table and "+res2+" rows inserted to valid_visitor table";
+			return res1 + " rows inserted to registered_visitor table and " + res2
+					+ " rows inserted to valid_visitor table";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -65,20 +66,20 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public String updateVisitor(Visitor visitor) {
-		
+
 		return null;
 	}
 
 	public Visitor getVisitorById(int id) {
 		Connection con = ConnectionGiver.getCreatedConnection();
 		String query = "SELECT * FROM registered_visitor WHERE id=?";
-		Visitor visitor=null;
+		Visitor visitor = null;
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, id);
 			ResultSet set = ps.executeQuery();
 			if (set.next()) {
-				visitor=new Visitor();
+				visitor = new Visitor();
 				visitor.setId(set.getInt(1));
 				visitor.setName(set.getString(2));
 				visitor.setEmail(set.getString(3));
@@ -98,16 +99,16 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	public Visitor deleteVisitorById(int id) {
 		Connection con = ConnectionGiver.getCreatedConnection();
-		String queryForDelete="DELETE FROM registered_visitor WHERE id=?";
-		String queryForReturn="SELECT * FROM registered_visitor WHERE id=?";
-		String query2="DELETE FROM valid_visitor WHERE id=?";
-		Visitor visitor=null;
+		String queryForDelete = "DELETE FROM registered_visitor WHERE id=?";
+		String queryForReturn = "SELECT * FROM registered_visitor WHERE id=?";
+		String query2 = "DELETE FROM valid_visitor WHERE id=?";
+		Visitor visitor = null;
 		try {
 			PreparedStatement ps = con.prepareStatement(queryForReturn);
 			ps.setInt(1, id);
 			ResultSet set = ps.executeQuery();
 			if (set.next()) {
-				visitor=new Visitor();
+				visitor = new Visitor();
 				visitor.setId(set.getInt(1));
 				visitor.setName(set.getString(2));
 				visitor.setEmail(set.getString(3));
@@ -121,7 +122,7 @@ public class VisitorDAOImp implements VisitorDAO {
 			PreparedStatement ps1 = con.prepareStatement(queryForDelete);
 			ps1.setInt(1, id);
 			ps1.executeUpdate();
-			if (set.getInt(7)>=18) {
+			if (set.getInt(7) >= 18) {
 				PreparedStatement ps2 = con.prepareStatement(query2);
 				ps2.setInt(1, id);
 				ps2.executeUpdate();
@@ -134,18 +135,18 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public List<Visitor> getAllRegisteredVisitor() {
-		List<Visitor> list=null;
+		List<Visitor> list = null;
 		Connection con = ConnectionGiver.getCreatedConnection();
-		String query="SELECT * FROM registered_visitor";
+		String query = "SELECT * FROM registered_visitor";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet set = ps.executeQuery();
 			while (set.next()) {
-				if (list==null) {
+				if (list == null) {
 					list = new ArrayList<>();
 				}
-				Visitor visitor=new Visitor();
-				visitor=new Visitor();
+				Visitor visitor = new Visitor();
+				visitor = new Visitor();
 				visitor.setId(set.getInt(1));
 				visitor.setName(set.getString(2));
 				visitor.setEmail(set.getString(3));
@@ -155,7 +156,7 @@ public class VisitorDAOImp implements VisitorDAO {
 				visitor.setAge(set.getInt(7));
 				visitor.setAddress(set.getString(8));
 				visitor.setPassword(set.getString(9));
-				
+
 				list.add(visitor);
 			}
 			con.close();
@@ -166,18 +167,18 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public List<Visitor> getAllValidVisitor() {
-		List<Visitor> list=null;
+		List<Visitor> list = null;
 		Connection con = ConnectionGiver.getCreatedConnection();
-		String query="SELECT * FROM valid_visitor";
+		String query = "SELECT * FROM valid_visitor";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet set = ps.executeQuery();
 			while (set.next()) {
-				if (list==null) {
+				if (list == null) {
 					list = new ArrayList<>();
 				}
-				Visitor visitor=new Visitor();
-				visitor=new Visitor();
+				Visitor visitor = new Visitor();
+				visitor = new Visitor();
 				visitor.setId(set.getInt(1));
 				visitor.setName(set.getString(2));
 				visitor.setEmail(set.getString(3));
@@ -187,7 +188,7 @@ public class VisitorDAOImp implements VisitorDAO {
 				visitor.setAge(set.getInt(7));
 				visitor.setAddress(set.getString(8));
 				visitor.setPassword(set.getString(9));
-				
+
 				list.add(visitor);
 			}
 			con.close();
@@ -198,8 +199,36 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public Visitor visitorLogin(String email, String password) {
-		
-		return null;
+		Connection con = ConnectionGiver.getCreatedConnection();
+		String query = "SELECT * FROM registered_visitor WHERE email=?";
+		Visitor visitor = null;
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, email);
+			ResultSet set = ps.executeQuery();
+			if (set.next()) {
+				if (set.getString(9).equals(password)) {
+					System.out.println("LogIn Successful");
+					visitor = new Visitor();
+					visitor.setId(set.getInt(1));
+					visitor.setName(set.getString(2));
+					visitor.setEmail(set.getString(3));
+					visitor.setPhone(set.getString(4));
+					visitor.setGender(set.getString(5));
+					visitor.setDob(set.getDate(6));
+					visitor.setAge(set.getInt(7));
+					visitor.setAddress(set.getString(8));
+					visitor.setPassword(set.getString(9));
+				} else {
+					System.out.println("LogIn Failed");
+				}
+			} else {
+				System.out.println("No User found having this email");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
 	}
 
 }

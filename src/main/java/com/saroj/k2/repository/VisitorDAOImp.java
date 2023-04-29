@@ -15,12 +15,12 @@ import com.saroj.k2.DTO.Visitor;
 public class VisitorDAOImp implements VisitorDAO {
 
 	public String saveVisitor(Visitor visitor) {
-		Connection connection = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionGiver.getCreatedConnection();
 		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		String validVisitorQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		try {
 			// for registered_visitor table
-			PreparedStatement ps1 = connection.prepareStatement(registeredVisitorQuery);
+			PreparedStatement ps1 = con.prepareStatement(registeredVisitorQuery);
 			ps1.setInt(1, visitor.getId());
 			ps1.setString(2, visitor.getName());
 			ps1.setString(3, visitor.getEmail());
@@ -37,7 +37,7 @@ public class VisitorDAOImp implements VisitorDAO {
 			// for valid_visitor table
 			int res2=0;
 			if (age >= 18) {
-				PreparedStatement ps2 = connection.prepareStatement(validVisitorQuery);
+				PreparedStatement ps2 = con.prepareStatement(validVisitorQuery);
 				ps2.setInt(1, visitor.getId());
 				ps2.setString(2, visitor.getName());
 				ps2.setString(3, visitor.getEmail());
@@ -51,7 +51,7 @@ public class VisitorDAOImp implements VisitorDAO {
 				res2 = ps2.executeUpdate();
 			}
 
-			connection.close();
+			con.close();
 
 			return res1 + " rows inserted to registered_visitor table and "+res2+" rows inserted to valid_visitor table";
 		} catch (SQLException e) {
@@ -97,8 +97,40 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public Visitor deleteVisitorById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection con = ConnectionGiver.getCreatedConnection();
+		String queryForDelete="DELETE FROM registered_visitor WHERE id=?";
+		String queryForReturn="SELECT * FROM registered_visitor WHERE id=?";
+		String query2="DELETE FROM valid_visitor WHERE id=?";
+		Visitor visitor=null;
+		try {
+			PreparedStatement ps = con.prepareStatement(queryForReturn);
+			ps.setInt(1, id);
+			ResultSet set = ps.executeQuery();
+			if (set.next()) {
+				visitor=new Visitor();
+				visitor.setId(set.getInt(1));
+				visitor.setName(set.getString(2));
+				visitor.setEmail(set.getString(3));
+				visitor.setPhone(set.getString(4));
+				visitor.setGender(set.getString(5));
+				visitor.setDob(set.getDate(6));
+				visitor.setAge(set.getInt(7));
+				visitor.setAddress(set.getString(8));
+				visitor.setPassword(set.getString(9));
+			}
+			PreparedStatement ps1 = con.prepareStatement(queryForDelete);
+			ps1.setInt(1, id);
+			ps1.executeUpdate();
+			if (set.getInt(7)>=18) {
+				PreparedStatement ps2 = con.prepareStatement(query2);
+				ps2.setInt(1, id);
+				ps2.executeUpdate();
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
 	}
 
 	public List<Visitor> getAllRegisteredVisitor() {
@@ -166,7 +198,7 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public Visitor visitorLogin(String email, String password) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

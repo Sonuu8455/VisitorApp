@@ -22,7 +22,9 @@ public class VisitorApp {
 		
 //		dao.getAllRegisteredVisitor().forEach(System.out::println);
 		
-		dao.getAllValidVisitor().forEach(System.out::println);
+//		dao.getAllValidVisitor().forEach(System.out::println);
+		
+		System.out.println(dao.deleteVisitorById(3));
 
 	}
 }

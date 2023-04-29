@@ -18,7 +18,9 @@ public class VisitorApp {
 //		visitor.setPassword("rinku@123");
 //		System.out.println(dao.saveVisitor(visitor));
 		
-		System.out.println(dao.getVisitorById(2));
+//		System.out.println(dao.getVisitorById(2));
+		
+		dao.getAllRegisteredVisitor().forEach(System.out::println);
 
 	}
 }

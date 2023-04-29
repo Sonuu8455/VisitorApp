@@ -3,6 +3,7 @@ package com.saroj.k2.repository;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -63,12 +64,34 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public String updateVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public Visitor getVisitorById(int id) {
-		return null;
+		Connection con = ConnectionGiver.getCreatedConnection();
+		String query = "SELECT * FROM registered_visitor WHERE id=?";
+		Visitor visitor=null;
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet set = ps.executeQuery();
+			if (set.next()) {
+				visitor=new Visitor();
+				visitor.setId(set.getInt(1));
+				visitor.setName(set.getString(2));
+				visitor.setEmail(set.getString(3));
+				visitor.setPhone(set.getString(4));
+				visitor.setGender(set.getString(5));
+				visitor.setDob(set.getDate(6));
+				visitor.setAge(set.getInt(7));
+				visitor.setAddress(set.getString(8));
+				visitor.setPassword(set.getString(9));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
 	}
 
 	public Visitor deleteVisitorById(int id) {

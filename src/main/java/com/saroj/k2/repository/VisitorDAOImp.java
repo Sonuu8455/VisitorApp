@@ -225,6 +225,7 @@ public class VisitorDAOImp implements VisitorDAO {
 			} else {
 				System.out.println("No User found having this email");
 			}
+			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

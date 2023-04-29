@@ -134,8 +134,35 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public List<Visitor> getAllValidVisitor() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Visitor> list=null;
+		Connection con = ConnectionGiver.getCreatedConnection();
+		String query="SELECT * FROM valid_visitor";
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet set = ps.executeQuery();
+			while (set.next()) {
+				if (list==null) {
+					list = new ArrayList<>();
+				}
+				Visitor visitor=new Visitor();
+				visitor=new Visitor();
+				visitor.setId(set.getInt(1));
+				visitor.setName(set.getString(2));
+				visitor.setEmail(set.getString(3));
+				visitor.setPhone(set.getString(4));
+				visitor.setGender(set.getString(5));
+				visitor.setDob(set.getDate(6));
+				visitor.setAge(set.getInt(7));
+				visitor.setAddress(set.getString(8));
+				visitor.setPassword(set.getString(9));
+				
+				list.add(visitor);
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	public Visitor visitorLogin(String email, String password) {

@@ -9,14 +9,14 @@ import java.util.Properties;
 
 public class ConnectionGiver {
 	public static Connection getCreatedConnection() {
-		Connection con=null;
+		Connection con = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url="jdbc:mysql://localhost:3306/k2_m10";
-			FileInputStream stream=new FileInputStream("src\\main\\resources\\mydbinfo.properties");
+			String url = "jdbc:mysql://localhost:3306/k2_m10";
+			FileInputStream stream = new FileInputStream("src\\main\\resources\\mydbinfo.properties");
 			Properties pro = new Properties();
 			pro.load(stream);
-			con=DriverManager.getConnection(url,pro);
+			con = DriverManager.getConnection(url, pro);
 		} catch (ClassNotFoundException | IOException | SQLException e) {
 			e.printStackTrace();
 		}

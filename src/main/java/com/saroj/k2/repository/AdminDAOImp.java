@@ -12,7 +12,7 @@ public class AdminDAOImp implements AdminDAO {
 	@Override
 	public String saveAdmin(Admin admin) {
 		Connection con = ConnectionGiver.getCreatedConnection();
-		String query="INSERT INTO admin VALUES (?,?,?)";
+		String query = "INSERT INTO admin VALUES (?,?,?)";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, admin.getId());
@@ -20,7 +20,7 @@ public class AdminDAOImp implements AdminDAO {
 			ps.setString(3, admin.getPassword());
 			int res = ps.executeUpdate();
 			con.close();
-			return res+" rows inserted";
+			return res + " rows inserted";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -30,8 +30,8 @@ public class AdminDAOImp implements AdminDAO {
 	@Override
 	public Admin adminLogin(String userName, String password) {
 		Connection con = ConnectionGiver.getCreatedConnection();
-		String query="SELECT * FROM admin WHERE user_name=?";
-		Admin admin=null;
+		String query = "SELECT * FROM admin WHERE user_name=?";
+		Admin admin = null;
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, userName);
@@ -39,14 +39,14 @@ public class AdminDAOImp implements AdminDAO {
 			if (set.next()) {
 				if (set.getString(3).equals(password)) {
 					System.out.println("LogIn Successful");
-					admin=new Admin();
+					admin = new Admin();
 					admin.setId(set.getInt(1));
 					admin.setUserName(set.getString(2));
 					admin.setPassword(set.getString(3));
-				}else {
+				} else {
 					System.out.println("LogIn Failed :( ");
 				}
-			}else {
+			} else {
 				System.out.println("No user foung having this user_name");
 			}
 			con.close();

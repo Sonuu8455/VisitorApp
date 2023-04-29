@@ -1,11 +1,13 @@
 package com.saroj.k2;
 
-import com.saroj.k2.repository.VisitorDAO;
-import com.saroj.k2.repository.VisitorDAOImp;
+import com.saroj.k2.DTO.Admin;
+import com.saroj.k2.repository.AdminDAO;
+import com.saroj.k2.repository.AdminDAOImp;
 
 public class VisitorApp {
 	public static void main(String[] args) {
-		VisitorDAO dao = new VisitorDAOImp();
+//		VisitorDAO dao = new VisitorDAOImp();
+		AdminDAO ad = new AdminDAOImp();
 		
 //		Visitor visitor = new Visitor();
 //		visitor.setId(3);
@@ -26,7 +28,12 @@ public class VisitorApp {
 		
 //		System.out.println(dao.deleteVisitorById(3));
 		
-		System.out.println(dao.visitorLogin("saroj@gmail.com", "saroj@123"));
-
+//		System.out.println(dao.visitorLogin("saroj@gmail.com", "saroj@123"));
+		
+		Admin admin = new Admin();
+		admin.setId(1);
+		admin.setUserName("saroj");
+		admin.setPassword("saroj@8455");
+		System.out.println(ad.saveAdmin(admin));
 	}
 }

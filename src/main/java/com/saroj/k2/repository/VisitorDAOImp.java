@@ -66,7 +66,6 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	public String updateVisitor(Visitor visitor) {
-
 		return null;
 	}
 

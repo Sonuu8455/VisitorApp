@@ -38,10 +38,10 @@ public class VisitorApp {
 //		System.out.println(ad.adminLogin("raja", "raja	@8455"));
 		
 		Visitor visitor = new Visitor();
-//		visitor.setName("rinku");
-//		visitor.setPhone("9556410194");
-//		visitor.setAddress("bhadrak");
-//		visitor.setPassword("rinku@8455");
+		visitor.setName("rinku");
+		visitor.setPhone("9556410194");
+		visitor.setAddress("bhadrak");
+		visitor.setPassword("rinku@8455");
 		visitor.setEmail("rinku@gmail.com");
 		System.out.println(dao.updateVisitor(visitor));
 	}

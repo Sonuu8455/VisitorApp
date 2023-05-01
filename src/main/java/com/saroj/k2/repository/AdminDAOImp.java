@@ -6,12 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.saroj.k2.DTO.Admin;
+import com.saroj.k2.util.ConnectionUtil;
 
 public class AdminDAOImp implements AdminDAO {
 
 	@Override
 	public String saveAdmin(Admin admin) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "INSERT INTO admin VALUES (?,?,?)";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
@@ -29,7 +30,7 @@ public class AdminDAOImp implements AdminDAO {
 
 	@Override
 	public Admin adminLogin(String userName, String password) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "SELECT * FROM admin WHERE user_name=?";
 		Admin admin = null;
 		try {

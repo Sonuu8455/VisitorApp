@@ -2,9 +2,13 @@ package com.saroj.k2.DTO;
 
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Visitor {
 	private Integer id;
 	private String name;

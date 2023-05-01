@@ -11,11 +11,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.saroj.k2.DTO.Visitor;
+import com.saroj.k2.util.ConnectionUtil;
 
 public class VisitorDAOImp implements VisitorDAO {
+
 	@Override
+	public String saveRegisteredVisitor(Visitor visitor) {
+		Connection con = ConnectionUtil.getConnection();
+		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
+		int res1=0;
+		try {
+			PreparedStatement ps1 = con.prepareStatement(registeredVisitorQuery);
+			ps1.setInt(1, visitor.getId());
+			ps1.setString(2, visitor.getName());
+			ps1.setString(3, visitor.getEmail());
+			ps1.setString(4, visitor.getPhone());
+			ps1.setString(5, visitor.getGender());
+			ps1.setDate(6, visitor.getDob());
+			int age = getAge(visitor.getDob());
+			ps1.setInt(7, age);
+			ps1.setString(8, visitor.getAddress());
+			ps1.setString(9, visitor.getPassword());
+			
+			res1 = ps1.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res1+" data registered";
+	}
+
+	@Override
+	public String saveValidVisitor(Visitor visitor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public String saveVisitor(Visitor visitor) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		String validVisitorQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		try {
@@ -65,12 +97,11 @@ public class VisitorDAOImp implements VisitorDAO {
 		return Period.between(dob.toLocalDate(), LocalDate.now()).getYears();
 	}
 
-	@Override
 	public String updateVisitor(Visitor visitor) {
 		if (visitor.getEmail() == null) {
 			return "Enter a email to update your data";
 		}
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String updateAll = "UPDATE registered_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
 		String updateName = "UPDATE registered_visitor SET name=? WHERE email=?";
 		String updatePhone = "UPDATE registered_visitor SET phone=? WHERE email=?";
@@ -176,7 +207,7 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public Visitor getVisitorById(int id) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "SELECT * FROM registered_visitor WHERE id=?";
 		Visitor visitor = null;
 		try {
@@ -204,7 +235,7 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public Visitor deleteVisitorById(int id) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String queryForDelete = "DELETE FROM registered_visitor WHERE id=?";
 		String queryForReturn = "SELECT * FROM registered_visitor WHERE id=?";
 		String query2 = "DELETE FROM valid_visitor WHERE id=?";
@@ -243,7 +274,7 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public List<Visitor> getAllRegisteredVisitor() {
 		List<Visitor> list = null;
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "SELECT * FROM registered_visitor";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
@@ -276,7 +307,7 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public List<Visitor> getAllValidVisitor() {
 		List<Visitor> list = null;
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "SELECT * FROM valid_visitor";
 		try {
 			PreparedStatement ps = con.prepareStatement(query);
@@ -308,7 +339,7 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public Visitor visitorLogin(String email, String password) {
-		Connection con = ConnectionGiver.getCreatedConnection();
+		Connection con = ConnectionUtil.getConnection();
 		String query = "SELECT * FROM registered_visitor WHERE email=?";
 		Visitor visitor = null;
 		try {
@@ -339,6 +370,18 @@ public class VisitorDAOImp implements VisitorDAO {
 			e.printStackTrace();
 		}
 		return visitor;
+	}
+
+	@Override
+	public String updateRegisteredVisitor(Visitor visitor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String updateValidVisitor(Visitor visitor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

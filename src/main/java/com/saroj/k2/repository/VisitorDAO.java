@@ -6,9 +6,13 @@ import com.saroj.k2.DTO.Visitor;
 
 public interface VisitorDAO {
 
-	public String saveVisitor(Visitor visitor);
+	public String saveRegisteredVisitor(Visitor visitor);
+	
+	public String saveValidVisitor(Visitor visitor);
 
-	public String updateVisitor(Visitor visitor);
+	public String updateRegisteredVisitor(Visitor visitor);
+	
+	public String updateValidVisitor(Visitor visitor);
 
 	public Visitor getVisitorById(int id);
 

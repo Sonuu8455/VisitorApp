@@ -13,12 +13,12 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public String saveVisitor(Visitor visitor) {
-		VisitorDAO visitorDAO = new VisitorDAOImp();
+		VisitorDAO dao = new VisitorDAOImp();
 		int age = calculateAge(visitor.getDob());
 		visitor.setAge(age);
-		String msg = visitorDAO.saveRegisteredVisitor(visitor);
+		String msg = dao.saveRegisteredVisitor(visitor);
 		if (age >= 21) {
-			visitorDAO.saveValidVisitor(visitor);
+			dao.saveValidVisitor(visitor);
 		}
 		return msg;
 	}
@@ -29,8 +29,12 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public String updateVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
+		VisitorDAO dao = new VisitorDAOImp();
+		String msg = dao.updateRegisteredVisitor(visitor);
+		if ((dao.getVisitorByEmail(visitor.getEmail()).getAge()>=21)) {
+			dao.updateValidVisitor(visitor);
+		}
+		return msg;
 	}
 
 	@Override

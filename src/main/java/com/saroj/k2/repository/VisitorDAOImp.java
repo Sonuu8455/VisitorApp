@@ -1,12 +1,9 @@
 package com.saroj.k2.repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,6 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public String saveRegisteredVisitor(Visitor visitor) {
 		Connection con = ConnectionUtil.getConnection();
-//		String registeredVisitorInsertQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		int res1=0;
 		try {
 			PreparedStatement ps1 = con.prepareStatement(AppConstants.registeredVisitorInsertQuery);
@@ -44,7 +40,6 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public String saveValidVisitor(Visitor visitor) {
 		Connection con = ConnectionUtil.getConnection();
-//		String validVisitorInsertQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		int res2=0;
 		try {
 			PreparedStatement ps2 = con.prepareStatement(AppConstants.validVisitorInsertQuery);
@@ -68,16 +63,31 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public String updateRegisteredVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
+		return updateAll(visitor, AppConstants.updateAllReg);
 	}
 
 	@Override
 	public String updateValidVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
+		return updateAll(visitor, AppConstants.updateAllValid);
 	}
 	
+	private String updateAll(Visitor visitor, String query) {
+		Connection con = ConnectionUtil.getConnection();
+		int res =0;
+		try {
+			PreparedStatement psAll = con.prepareStatement(query);
+			psAll.setString(1, visitor.getName());
+			psAll.setString(2, visitor.getPhone());
+			psAll.setString(3, visitor.getAddress());
+			psAll.setString(4, visitor.getPassword());
+			psAll.setString(5, visitor.getEmail());
+			res = psAll.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res+AppConstants.returnStmUpdate;
+	}
+
 	public String updateVisitor(Visitor visitor) {
 		if (visitor.getEmail() == null) {
 			return "Enter a email to update your data";
@@ -214,6 +224,34 @@ public class VisitorDAOImp implements VisitorDAO {
 		return visitor;
 	}
 
+	@Override
+	public Visitor getVisitorByEmail(String email) {
+		Connection con = ConnectionUtil.getConnection();
+		String query = "SELECT * FROM registered_visitor WHERE email=?";
+		Visitor visitor = null;
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, email);
+			ResultSet set = ps.executeQuery();
+			if (set.next()) {
+				visitor = new Visitor();
+				visitor.setId(set.getInt(1));
+				visitor.setName(set.getString(2));
+				visitor.setEmail(set.getString(3));
+				visitor.setPhone(set.getString(4));
+				visitor.setGender(set.getString(5));
+				visitor.setDob(set.getDate(6));
+				visitor.setAge(set.getInt(7));
+				visitor.setAddress(set.getString(8));
+				visitor.setPassword(set.getString(9));
+			}
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
+	}
+	
 	@Override
 	public Visitor deleteVisitorById(int id) {
 		Connection con = ConnectionUtil.getConnection();

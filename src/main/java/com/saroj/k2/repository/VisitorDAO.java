@@ -23,4 +23,6 @@ public interface VisitorDAO {
 	public List<Visitor> getAllValidVisitor();
 
 	public Visitor visitorLogin(String email, String password);
+	
+	public Visitor getVisitorByEmail(String email);
 }

@@ -11,5 +11,10 @@ public interface AppConstants {
 	
 	String validVisitorInsertQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 	
+	String updateAllReg = "UPDATE registered_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
+	
+	String updateAllValid = "UPDATE valid_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
+	
 	String returnStmInsert=" data registered";
+	String returnStmUpdate=" row data updated";
 }

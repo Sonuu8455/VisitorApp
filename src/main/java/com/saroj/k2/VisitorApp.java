@@ -43,6 +43,6 @@ public class VisitorApp {
 		visitor.setAddress("bhadrak");
 		visitor.setPassword("rinku@8455");
 		visitor.setEmail("rinku@gmail.com");
-		System.out.println(dao.updateVisitor(visitor));
+//		System.out.println(dao.updateVisitor(visitor));
 	}
 }

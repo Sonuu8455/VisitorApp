@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.saroj.k2.DTO.Visitor;
+import com.saroj.k2.util.AppConstants;
 import com.saroj.k2.util.ConnectionUtil;
 
 public class VisitorDAOImp implements VisitorDAO {
@@ -18,18 +19,17 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public String saveRegisteredVisitor(Visitor visitor) {
 		Connection con = ConnectionUtil.getConnection();
-		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
+//		String registeredVisitorInsertQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 		int res1=0;
 		try {
-			PreparedStatement ps1 = con.prepareStatement(registeredVisitorQuery);
+			PreparedStatement ps1 = con.prepareStatement(AppConstants.registeredVisitorInsertQuery);
 			ps1.setInt(1, visitor.getId());
 			ps1.setString(2, visitor.getName());
 			ps1.setString(3, visitor.getEmail());
 			ps1.setString(4, visitor.getPhone());
 			ps1.setString(5, visitor.getGender());
 			ps1.setDate(6, visitor.getDob());
-			int age = getAge(visitor.getDob());
-			ps1.setInt(7, age);
+			ps1.setInt(7, visitor.getAge());
 			ps1.setString(8, visitor.getAddress());
 			ps1.setString(9, visitor.getPassword());
 			
@@ -38,65 +38,46 @@ public class VisitorDAOImp implements VisitorDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return res1+" data registered";
+		return res1+AppConstants.returnStmInsert;
 	}
 
 	@Override
 	public String saveValidVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public String saveVisitor(Visitor visitor) {
 		Connection con = ConnectionUtil.getConnection();
-		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
-		String validVisitorQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
+//		String validVisitorInsertQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
+		int res2=0;
 		try {
-			// for registered_visitor table
-			PreparedStatement ps1 = con.prepareStatement(registeredVisitorQuery);
-			ps1.setInt(1, visitor.getId());
-			ps1.setString(2, visitor.getName());
-			ps1.setString(3, visitor.getEmail());
-			ps1.setString(4, visitor.getPhone());
-			ps1.setString(5, visitor.getGender());
-			ps1.setDate(6, visitor.getDob());
-			int age = getAge(visitor.getDob());
-			ps1.setInt(7, age);
-			ps1.setString(8, visitor.getAddress());
-			ps1.setString(9, visitor.getPassword());
-
-			int res1 = ps1.executeUpdate();
-
-			// for valid_visitor table
-			int res2 = 0;
-			if (age >= 18) {
-				PreparedStatement ps2 = con.prepareStatement(validVisitorQuery);
-				ps2.setInt(1, visitor.getId());
-				ps2.setString(2, visitor.getName());
-				ps2.setString(3, visitor.getEmail());
-				ps2.setString(4, visitor.getPhone());
-				ps2.setString(5, visitor.getGender());
-				ps2.setDate(6, visitor.getDob());
-				ps2.setInt(7, age);
-				ps2.setString(8, visitor.getAddress());
-				ps2.setString(9, visitor.getPassword());
-
-				res2 = ps2.executeUpdate();
-			}
-
+			PreparedStatement ps2 = con.prepareStatement(AppConstants.validVisitorInsertQuery);
+			ps2.setInt(1, visitor.getId());
+			ps2.setString(2, visitor.getName());
+			ps2.setString(3, visitor.getEmail());
+			ps2.setString(4, visitor.getPhone());
+			ps2.setString(5, visitor.getGender());
+			ps2.setDate(6, visitor.getDob());
+			ps2.setInt(7, visitor.getAge());
+			ps2.setString(8, visitor.getAddress());
+			ps2.setString(9, visitor.getPassword());
+			
+			res2 = ps2.executeUpdate();
 			con.close();
-
-			return res1 + " rows inserted to registered_visitor table and " + res2
-					+ " rows inserted to valid_visitor table";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return "no rows inserted";
+		return res2+AppConstants.returnStmInsert;
 	}
 
-	private int getAge(Date dob) {
-		return Period.between(dob.toLocalDate(), LocalDate.now()).getYears();
+	@Override
+	public String updateRegisteredVisitor(Visitor visitor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	@Override
+	public String updateValidVisitor(Visitor visitor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public String updateVisitor(Visitor visitor) {
 		if (visitor.getEmail() == null) {
 			return "Enter a email to update your data";
@@ -370,18 +351,6 @@ public class VisitorDAOImp implements VisitorDAO {
 			e.printStackTrace();
 		}
 		return visitor;
-	}
-
-	@Override
-	public String updateRegisteredVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String updateValidVisitor(Visitor visitor) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

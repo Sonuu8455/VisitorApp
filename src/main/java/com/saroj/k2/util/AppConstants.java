@@ -11,10 +11,22 @@ public interface AppConstants {
 	
 	String validVisitorInsertQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 	
-	String updateAllReg = "UPDATE registered_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
-	
+	String updateAllRegistered = "UPDATE registered_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
 	String updateAllValid = "UPDATE valid_visitor SET name=?, phone=?, address=?, password=? WHERE email=?";
+	
+	String updateNameRegistered="UPDATE registered_visitor SET name=? WHERE email=?";
+	String updateNameValid="UPDATE valid_visitor SET name=? WHERE email=?";
+	
+	String updatePhoneRegistered="UPDATE registered_visitor SET phone=? WHERE email=?";
+	String updatePhoneValid="UPDATE valid_visitor SET phone=? WHERE email=?";
+	
+	String updateAddressRegistered="UPDATE registered_visitor SET address=? WHERE email=?";
+	String updateAddressValid="UPDATE valid_visitor SET address=? WHERE email=?";
+	
+	String updatePasswordRegistered="UPDATE registered_visitor SET password=? WHERE email=?";
+	String updatePasswordValid="UPDATE valid_visitor SET password=? WHERE email=?";
 	
 	String returnStmInsert=" data registered";
 	String returnStmUpdate=" row data updated";
+	String retNull="No data updated";
 }

@@ -12,11 +12,11 @@ public class AppController {
 //		Date dob=Date.valueOf(LocalDate.of(2007, 02, 26));
 //		Visitor visitor = new Visitor(7, "sss", "sss@gmail.com", "987654321", "male", dob, null, "jajpur", "sss@8455");
 		Visitor visitor2=new Visitor();
-		visitor2.setName("ttt");
-		visitor2.setPhone("54984894956");
-		visitor2.setAddress("sdfgdfgdfg");
-		visitor2.setPassword("ttt@5444");
-		visitor2.setEmail("sdfsdf@gmail.com");
+//		visitor2.setName("hhhhhuhsdufhh");
+//		visitor2.setPhone("00000000");
+//		visitor2.setAddress("j2ee");
+//		visitor2.setPassword("jhand@8455");
+		visitor2.setEmail("sss@gmail.com");
 		
 		System.out.println(service.updateVisitor(visitor2));
 //		System.out.println(service.saveVisitor(visitor));

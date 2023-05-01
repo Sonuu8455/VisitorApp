@@ -13,7 +13,7 @@ import java.util.List;
 import com.saroj.k2.DTO.Visitor;
 
 public class VisitorDAOImp implements VisitorDAO {
-
+	@Override
 	public String saveVisitor(Visitor visitor) {
 		Connection con = ConnectionGiver.getCreatedConnection();
 		String registeredVisitorQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
@@ -65,6 +65,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return Period.between(dob.toLocalDate(), LocalDate.now()).getYears();
 	}
 
+	@Override
 	public String updateVisitor(Visitor visitor) {
 		if (visitor.getEmail() == null) {
 			return "Enter a email to update your data";
@@ -125,8 +126,8 @@ public class VisitorDAOImp implements VisitorDAO {
 				psPassword.setString(2, visitor.getEmail());
 				int res5 = psPassword.executeUpdate();
 				ret = res5 + " rows updated. Password updated.";
-			}else {
-				ret="this data can not be changed";
+			} else {
+				ret = "this data can not be changed";
 			}
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, visitor.getEmail());
@@ -173,6 +174,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return ret;
 	}
 
+	@Override
 	public Visitor getVisitorById(int id) {
 		Connection con = ConnectionGiver.getCreatedConnection();
 		String query = "SELECT * FROM registered_visitor WHERE id=?";
@@ -200,6 +202,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return visitor;
 	}
 
+	@Override
 	public Visitor deleteVisitorById(int id) {
 		Connection con = ConnectionGiver.getCreatedConnection();
 		String queryForDelete = "DELETE FROM registered_visitor WHERE id=?";
@@ -237,6 +240,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return visitor;
 	}
 
+	@Override
 	public List<Visitor> getAllRegisteredVisitor() {
 		List<Visitor> list = null;
 		Connection con = ConnectionGiver.getCreatedConnection();
@@ -269,6 +273,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return list;
 	}
 
+	@Override
 	public List<Visitor> getAllValidVisitor() {
 		List<Visitor> list = null;
 		Connection con = ConnectionGiver.getCreatedConnection();
@@ -301,6 +306,7 @@ public class VisitorDAOImp implements VisitorDAO {
 		return list;
 	}
 
+	@Override
 	public Visitor visitorLogin(String email, String password) {
 		Connection con = ConnectionGiver.getCreatedConnection();
 		String query = "SELECT * FROM registered_visitor WHERE email=?";

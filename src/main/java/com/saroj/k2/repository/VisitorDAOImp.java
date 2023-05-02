@@ -269,9 +269,8 @@ public class VisitorDAOImp implements VisitorDAO {
 	public List<Visitor> getAllRegisteredVisitor() {
 		List<Visitor> list = null;
 		Connection con = ConnectionUtil.getConnection();
-		String query = "SELECT * FROM registered_visitor";
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(AppConstants.selectAllRegistered);
 			ResultSet set = ps.executeQuery();
 			while (set.next()) {
 				if (list == null) {
@@ -302,9 +301,8 @@ public class VisitorDAOImp implements VisitorDAO {
 	public List<Visitor> getAllValidVisitor() {
 		List<Visitor> list = null;
 		Connection con = ConnectionUtil.getConnection();
-		String query = "SELECT * FROM valid_visitor";
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(AppConstants.selectAllValid);
 			ResultSet set = ps.executeQuery();
 			while (set.next()) {
 				if (list == null) {

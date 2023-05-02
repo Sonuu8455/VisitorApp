@@ -8,12 +8,28 @@ import java.util.List;
 import com.saroj.k2.DTO.Visitor;
 import com.saroj.k2.repository.VisitorDAO;
 import com.saroj.k2.repository.VisitorDAOImp;
+import com.saroj.k2.util.AES;
+import com.saroj.k2.util.AppConstants;
 
 public class VisitorServiceImplemented implements VisitorService {
+	private VisitorDAO dao;
+	{
+		dao=new VisitorDAOImp();
+	}
 
 	@Override
 	public String saveVisitor(Visitor visitor) {
-		VisitorDAO dao = new VisitorDAOImp();
+		String enEmail = AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY);
+		String enPhone =AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY);
+		String enAddress =AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY);
+		String enPassword =AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY);
+		
+		visitor.setEmail(enEmail);
+		visitor.setPhone(enPhone);
+		visitor.setAddress(enAddress);
+		visitor.setPassword(enPassword);
+		
+//		VisitorDAO dao = new VisitorDAOImp();
 		int age = calculateAge(visitor.getDob());
 		visitor.setAge(age);
 		String msg = dao.saveRegisteredVisitor(visitor);
@@ -40,7 +56,12 @@ public class VisitorServiceImplemented implements VisitorService {
 	@Override
 	public Visitor getVisitorById(int id) {
 		VisitorDAO dao = new VisitorDAOImp();
-		return dao.getVisitorById(id);
+		Visitor visitor = dao.getVisitorById(id);
+		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		return visitor;
 	}
 
 	@Override

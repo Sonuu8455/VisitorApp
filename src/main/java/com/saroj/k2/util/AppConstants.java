@@ -7,6 +7,8 @@ public interface AppConstants {
 	String USER_NAME = "root";
 	String PASSWORD = "root";
 	
+	String SECRET_KEY="1as%sdjds!@@!@()&*&^&^?<";//This is used to encrypt or decrypt information.
+	
 	String registeredVisitorInsertQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 	
 	String validVisitorInsertQuery = "INSERT INTO valid_visitor VALUES (?,?,?,?,?,?,?,?,?)";
@@ -31,6 +33,9 @@ public interface AppConstants {
 	
 	String deleteRegisteredVisitorById="DELETE FROM registered_visitor WHERE id=?";
 	String deleteValidVisitorById="DELETE FROM valid_visitor WHERE id=?";
+	
+	String selectAllRegistered="SELECT * FROM registered_visitor";
+	String selectAllValid="SELECT * FROM valid_visitor";
 	
 	String noEmailPresent="Enter a email to update your data";
 	String returnStmInsert=" data registered";

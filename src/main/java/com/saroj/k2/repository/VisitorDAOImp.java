@@ -65,7 +65,7 @@ public class VisitorDAOImp implements VisitorDAO {
 	public String updateRegisteredVisitor(Visitor visitor) {
 		String msg=AppConstants.retNull;
 		if (visitor.getEmail() == null) {
-			return "Enter a email to update your data";
+			return AppConstants.noEmailPresent;
 		}
 		if (visitor.getName() != null && visitor.getPhone() != null && visitor.getAddress() != null
 				&& visitor.getPassword() != null) {
@@ -211,10 +211,9 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public Visitor getVisitorByEmail(String email) {
 		Connection con = ConnectionUtil.getConnection();
-		String query = "SELECT * FROM registered_visitor WHERE email=?";
 		Visitor visitor = null;
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(AppConstants.getVisitorByEmail);
 			ps.setString(1, email);
 			ResultSet set = ps.executeQuery();
 			if (set.next()) {
@@ -237,36 +236,28 @@ public class VisitorDAOImp implements VisitorDAO {
 	}
 
 	@Override
-	public Visitor deleteVisitorById(int id) {
+	public Visitor deleteRegisteredVisitorById(int id) {
 		Connection con = ConnectionUtil.getConnection();
-		String queryForDelete = "DELETE FROM registered_visitor WHERE id=?";
-		String queryForReturn = "SELECT * FROM registered_visitor WHERE id=?";
-		String query2 = "DELETE FROM valid_visitor WHERE id=?";
-		Visitor visitor = null;
+		Visitor visitor=getVisitorById(id);
 		try {
-			PreparedStatement ps = con.prepareStatement(queryForReturn);
-			ps.setInt(1, id);
-			ResultSet set = ps.executeQuery();
-			if (set.next()) {
-				visitor = new Visitor();
-				visitor.setId(set.getInt(1));
-				visitor.setName(set.getString(2));
-				visitor.setEmail(set.getString(3));
-				visitor.setPhone(set.getString(4));
-				visitor.setGender(set.getString(5));
-				visitor.setDob(set.getDate(6));
-				visitor.setAge(set.getInt(7));
-				visitor.setAddress(set.getString(8));
-				visitor.setPassword(set.getString(9));
-			}
-			PreparedStatement ps1 = con.prepareStatement(queryForDelete);
-			ps1.setInt(1, id);
-			ps1.executeUpdate();
-			if (set.getInt(7) >= 18) {
-				PreparedStatement ps2 = con.prepareStatement(query2);
-				ps2.setInt(1, id);
-				ps2.executeUpdate();
-			}
+			PreparedStatement psDel = con.prepareStatement(AppConstants.deleteRegisteredVisitorById);
+			psDel.setInt(1, id);
+			psDel.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
+	}
+
+	@Override
+	public Visitor deleteValidVisitorById(int id) {
+		Connection con = ConnectionUtil.getConnection();
+		Visitor visitor = getVisitorById(id);
+		try {
+			PreparedStatement psDelete = con.prepareStatement(AppConstants.deleteValidVisitorById);
+			psDelete.setInt(1, id);
+			psDelete.executeUpdate();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

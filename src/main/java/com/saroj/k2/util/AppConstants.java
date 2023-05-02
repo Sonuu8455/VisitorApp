@@ -27,7 +27,12 @@ public interface AppConstants {
 	String updatePasswordValid="UPDATE valid_visitor SET password=? WHERE email=?";
 	
 	String getVisitorById="SELECT * FROM registered_visitor WHERE id=?";
+	String getVisitorByEmail="SELECT * FROM registered_visitor WHERE email=?";
 	
+	String deleteRegisteredVisitorById="DELETE FROM registered_visitor WHERE id=?";
+	String deleteValidVisitorById="DELETE FROM valid_visitor WHERE id=?";
+	
+	String noEmailPresent="Enter a email to update your data";
 	String returnStmInsert=" data registered";
 	String returnStmUpdate=" row data updated";
 	String retNull="No data updated";

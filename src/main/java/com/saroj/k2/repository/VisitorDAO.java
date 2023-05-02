@@ -16,7 +16,9 @@ public interface VisitorDAO {
 
 	public Visitor getVisitorById(int id);
 
-	public Visitor deleteVisitorById(int id);
+	public Visitor deleteRegisteredVisitorById(int id);
+	
+	public Visitor deleteValidVisitorById(int id);
 
 	public List<Visitor> getAllRegisteredVisitor();
 

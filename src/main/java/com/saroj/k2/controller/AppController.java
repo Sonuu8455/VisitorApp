@@ -8,8 +8,8 @@ public class AppController {
 	public static void main(String[] args) {
 		VisitorService service = new VisitorServiceImplemented();
 		
-//		Date dob=Date.valueOf(LocalDate.of(2007, 02, 26));
-//		Visitor visitor = new Visitor(7, "sss", "sss@gmail.com", "987654321", "male", dob, null, "jajpur", "sss@8455");
+//		Date dob=Date.valueOf(LocalDate.of(2000, 02, 26));
+//		Visitor visitor = new Visitor(8, "hjghj", "hgfgh@gmail.com", "1646165", "male", dob, null, "jajpur", "asd@8455");
 //		Visitor visitor2=new Visitor();
 //		visitor2.setName("hhhhhuhsdufhh");
 //		visitor2.setPhone("00000000");
@@ -18,7 +18,8 @@ public class AppController {
 //		visitor2.setEmail("sss@gmail.com");
 		
 //		System.out.println(service.getVisitorById(3));
-		System.out.println(service.getVisitorByEmail("saroj@gmail.com"));
+//		System.out.println(service.getVisitorByEmail("saroj@gmail.com"));
+		System.out.println(service.deleteVisitorById(8));
 //		System.out.println(service.saveVisitor(visitor));
 //		service.getAllValidVisitor().forEach(System.out::println);
 	}

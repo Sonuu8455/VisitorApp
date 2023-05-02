@@ -51,8 +51,13 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public Visitor deleteVisitorById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		VisitorDAO dao =new VisitorDAOImp();
+		Visitor temp = dao.getVisitorById(id);
+		Visitor visitor = dao.deleteRegisteredVisitorById(id);
+		if (temp.getAge()>=21) {
+			dao.deleteValidVisitorById(id);
+		}
+		return visitor;
 	}
 
 	@Override

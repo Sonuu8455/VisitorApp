@@ -12,8 +12,12 @@ public interface VisitorService {
 	public String updateVisitor(Visitor visitor);
 
 	public Visitor getVisitorById(int id);
+	
+	public Visitor getVisitorByEmail(String email);
 
 	public Visitor deleteVisitorById(int id);
+	
+	public Visitor deleteVisitorByEmail(String email);
 
 	public List<Visitor> getAllRegisteredVisitor();
 

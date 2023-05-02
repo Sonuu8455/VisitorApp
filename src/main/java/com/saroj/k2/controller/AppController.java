@@ -18,8 +18,9 @@ public class AppController {
 //		visitor2.setEmail("sss@gmail.com");
 		
 //		System.out.println(service.getVisitorById(3));
+		System.out.println(service.getVisitorByEmail("saroj@gmail.com"));
 //		System.out.println(service.saveVisitor(visitor));
-		service.getAllValidVisitor().forEach(System.out::println);
+//		service.getAllValidVisitor().forEach(System.out::println);
 	}
 }
 

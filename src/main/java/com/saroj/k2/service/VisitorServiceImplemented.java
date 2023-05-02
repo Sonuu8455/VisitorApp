@@ -44,7 +44,19 @@ public class VisitorServiceImplemented implements VisitorService {
 	}
 
 	@Override
+	public Visitor getVisitorByEmail(String email) {
+		VisitorDAO dao=new VisitorDAOImp();
+		return dao.getVisitorByEmail(email);
+	}
+
+	@Override
 	public Visitor deleteVisitorById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Visitor deleteVisitorByEmail(String email) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -134,16 +134,18 @@ public class VisitorServiceImplemented implements VisitorService {
 	@Override
 	public List<Visitor> registeredVisitorSortedByName() {
 		List<Visitor> registeredVisitor = dao.getAllRegisteredVisitor();
-		List<Visitor> list = registeredVisitor.stream()
-				.sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName())).collect(Collectors.toList());
+		List<Visitor> list2 = registeredVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		List<Visitor> list = list2.stream().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName()))
+				.collect(Collectors.toList());
 		return list;
 	}
 
 	@Override
 	public List<Visitor> registeredVisitorSortedByEmail() {
 		List<Visitor> registeredVisitor = dao.getAllRegisteredVisitor();
-		List<Visitor> list = registeredVisitor.stream()
-				.sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail())).collect(Collectors.toList());
+		List<Visitor> list2 = registeredVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		List<Visitor> list = list2.stream().sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail()))
+				.collect(Collectors.toList());
 		return list;
 	}
 

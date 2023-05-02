@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.saroj.k2.DTO.Visitor;
 import com.saroj.k2.repository.VisitorDAO;
@@ -14,22 +15,16 @@ import com.saroj.k2.util.AppConstants;
 public class VisitorServiceImplemented implements VisitorService {
 	private VisitorDAO dao;
 	{
-		dao=new VisitorDAOImp();
+		dao = new VisitorDAOImp();
 	}
 
 	@Override
 	public String saveVisitor(Visitor visitor) {
-		String enEmail = AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY);
-		String enPhone =AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY);
-		String enAddress =AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY);
-		String enPassword =AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY);
-		
-		visitor.setEmail(enEmail);
-		visitor.setPhone(enPhone);
-		visitor.setAddress(enAddress);
-		visitor.setPassword(enPassword);
-		
-//		VisitorDAO dao = new VisitorDAOImp();
+		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+
 		int age = calculateAge(visitor.getDob());
 		visitor.setAge(age);
 		String msg = dao.saveRegisteredVisitor(visitor);
@@ -45,9 +40,18 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public String updateVisitor(Visitor visitor) {
-		VisitorDAO dao = new VisitorDAOImp();
+		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		if (visitor.getEmail()==null) {
+			return AppConstants.noEmailPresent;
+		}
+		if (dao.getVisitorByEmail(visitor.getEmail())==null) {
+			return AppConstants.diffEmailEntered;
+		}
 		String msg = dao.updateRegisteredVisitor(visitor);
-		if ((dao.getVisitorByEmail(visitor.getEmail()).getAge()>=21)) {
+		if ((dao.getVisitorByEmail(visitor.getEmail()).getAge() >= 21)) {
 			dao.updateValidVisitor(visitor);
 		}
 		return msg;
@@ -55,7 +59,6 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public Visitor getVisitorById(int id) {
-		VisitorDAO dao = new VisitorDAOImp();
 		Visitor visitor = dao.getVisitorById(id);
 		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
 		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
@@ -66,67 +69,107 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public Visitor getVisitorByEmail(String email) {
-		VisitorDAO dao=new VisitorDAOImp();
-		return dao.getVisitorByEmail(email);
+		Visitor visitor = dao.getVisitorByEmail(AES.encrypt(email, AppConstants.SECRET_KEY));
+		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		return visitor;
 	}
 
 	@Override
 	public Visitor deleteVisitorById(int id) {
-		VisitorDAO dao =new VisitorDAOImp();
 		Visitor temp = dao.getVisitorById(id);
 		Visitor visitor = dao.deleteRegisteredVisitorById(id);
-		if (temp.getAge()>=21) {
-			dao.deleteValidVisitorById(id);
+		if (visitor != null) {
+			if (temp.getAge() >= 21) {
+				dao.deleteValidVisitorById(id);
+			}
 		}
+		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
 		return visitor;
 	}
 
 	@Override
 	public Visitor deleteVisitorByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		String enEmail = AES.encrypt(email, AppConstants.SECRET_KEY);
+		Visitor temp = dao.getVisitorByEmail(enEmail);
+		Visitor visitor = dao.deleteRegisteredVisitorByEmail(enEmail);
+		if (visitor != null) {
+			if (temp.getAge() >= 21) {
+				dao.deleteValidVisitorByEmail(enEmail);
+			}
+		}
+		return visitor;
 	}
 
 	@Override
 	public List<Visitor> getAllRegisteredVisitor() {
-		VisitorDAO dao = new VisitorDAOImp();
 		return dao.getAllRegisteredVisitor();
 	}
 
 	@Override
 	public List<Visitor> getAllValidVisitor() {
-		VisitorDAO dao = new VisitorDAOImp();
 		return dao.getAllValidVisitor();
 	}
 
 	@Override
 	public Visitor visitorLogin(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		Visitor visitor = dao.visitorLogin(email, password);
+		return visitor;
 	}
 
 	@Override
 	public List<Visitor> validVisitorSortedByName() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Visitor> allValidVisitor = dao.getAllValidVisitor();
+		List<Visitor> list = allValidVisitor.stream().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName()))
+				.collect(Collectors.toList());
+		return list;
 	}
 
 	@Override
 	public List<Visitor> validVisitorSortedByEmail() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Visitor> allValidVisitor = dao.getAllValidVisitor();
+		List<Visitor> list = allValidVisitor.stream()
+				.sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail())).collect(Collectors.toList());
+		return list;
 	}
 
 	@Override
 	public List<Visitor> registeredVisitorSortedByName() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Visitor> registeredVisitor = dao.getAllRegisteredVisitor();
+		List<Visitor> list = registeredVisitor.stream()
+				.sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName())).collect(Collectors.toList());
+		return list;
 	}
 
 	@Override
 	public List<Visitor> registeredVisitorSortedByEmail() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Visitor> registeredVisitor = dao.getAllRegisteredVisitor();
+		List<Visitor> list = registeredVisitor.stream()
+				.sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail())).collect(Collectors.toList());
+		return list;
+	}
+	
+	private Visitor decryptVisitor(Visitor visitor) {
+		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		
+		return visitor;
+	}
+	
+	private Visitor encryptVisitor(Visitor visitor) {
+		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
+		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
+		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
+		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		
+		return visitor;
 	}
 
 }

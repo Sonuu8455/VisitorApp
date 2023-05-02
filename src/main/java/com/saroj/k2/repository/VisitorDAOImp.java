@@ -63,42 +63,42 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public String updateRegisteredVisitor(Visitor visitor) {
-		String msg=AppConstants.retNull;
+		String msg = AppConstants.retNull;
 		if (visitor.getEmail() == null) {
 			return AppConstants.noEmailPresent;
 		}
 		if (visitor.getName() != null && visitor.getPhone() != null && visitor.getAddress() != null
 				&& visitor.getPassword() != null) {
 			msg = updateAll(visitor, AppConstants.updateAllRegistered);
-		}else if (visitor.getName()!=null) {
-			msg=updateName(visitor, AppConstants.updateNameRegistered);
-		}else if (visitor.getPhone()!=null) {
-			msg=updatePhone(visitor, AppConstants.updatePhoneRegistered);
-		}else if (visitor.getAddress()!=null) {
-			msg=updateAddress(visitor, AppConstants.updateAddressRegistered);
-		}else if (visitor.getPassword()!=null) {
-			msg=updatePassword(visitor, AppConstants.updatePasswordRegistered);
+		} else if (visitor.getName() != null) {
+			msg = updateName(visitor, AppConstants.updateNameRegistered);
+		} else if (visitor.getPhone() != null) {
+			msg = updatePhone(visitor, AppConstants.updatePhoneRegistered);
+		} else if (visitor.getAddress() != null) {
+			msg = updateAddress(visitor, AppConstants.updateAddressRegistered);
+		} else if (visitor.getPassword() != null) {
+			msg = updatePassword(visitor, AppConstants.updatePasswordRegistered);
 		}
 		return msg;
 	}
 
 	@Override
 	public String updateValidVisitor(Visitor visitor) {
-		String msg=AppConstants.retNull;
+		String msg = AppConstants.retNull;
 		if (visitor.getEmail() == null) {
-			return "Enter a email to update your data";
+			return AppConstants.noEmailPresent;
 		}
 		if (visitor.getName() != null && visitor.getPhone() != null && visitor.getAddress() != null
 				&& visitor.getPassword() != null) {
 			msg = updateAll(visitor, AppConstants.updateAllValid);
-		}else if (visitor.getName()!=null) {
-			msg=updateName(visitor, AppConstants.updateNameValid);
-		}else if (visitor.getPhone()!=null) {
-			msg=updatePhone(visitor, AppConstants.updatePhoneValid);
-		}else if (visitor.getAddress()!=null) {
-			msg=updateAddress(visitor, AppConstants.updateAddressValid);
-		}else if (visitor.getPassword()!=null) {
-			msg=updatePassword(visitor, AppConstants.updatePasswordValid);
+		} else if (visitor.getName() != null) {
+			msg = updateName(visitor, AppConstants.updateNameValid);
+		} else if (visitor.getPhone() != null) {
+			msg = updatePhone(visitor, AppConstants.updatePhoneValid);
+		} else if (visitor.getAddress() != null) {
+			msg = updateAddress(visitor, AppConstants.updateAddressValid);
+		} else if (visitor.getPassword() != null) {
+			msg = updatePassword(visitor, AppConstants.updatePasswordValid);
 		}
 		return msg;
 	}
@@ -238,7 +238,7 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public Visitor deleteRegisteredVisitorById(int id) {
 		Connection con = ConnectionUtil.getConnection();
-		Visitor visitor=getVisitorById(id);
+		Visitor visitor = getVisitorById(id);
 		try {
 			PreparedStatement psDel = con.prepareStatement(AppConstants.deleteRegisteredVisitorById);
 			psDel.setInt(1, id);
@@ -257,6 +257,36 @@ public class VisitorDAOImp implements VisitorDAO {
 		try {
 			PreparedStatement psDelete = con.prepareStatement(AppConstants.deleteValidVisitorById);
 			psDelete.setInt(1, id);
+			psDelete.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
+	}
+
+	@Override
+	public Visitor deleteRegisteredVisitorByEmail(String email) {
+		Connection con = ConnectionUtil.getConnection();
+		Visitor visitor = getVisitorByEmail(email);
+		try {
+			PreparedStatement psDel = con.prepareStatement(AppConstants.deleteRegisteredVisitorByEmail);
+			psDel.setString(1, email);
+			psDel.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visitor;
+	}
+
+	@Override
+	public Visitor deleteValidVisitorByEmail(String email) {
+		Connection con = ConnectionUtil.getConnection();
+		Visitor visitor = getVisitorByEmail(email);
+		try {
+			PreparedStatement psDelete = con.prepareStatement(AppConstants.deleteValidVisitorByEmail);
+			psDelete.setString(1, email);
 			psDelete.executeUpdate();
 			con.close();
 		} catch (SQLException e) {
@@ -331,37 +361,48 @@ public class VisitorDAOImp implements VisitorDAO {
 
 	@Override
 	public Visitor visitorLogin(String email, String password) {
-		Connection con = ConnectionUtil.getConnection();
-		String query = "SELECT * FROM registered_visitor WHERE email=?";
-		Visitor visitor = null;
-		try {
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, email);
-			ResultSet set = ps.executeQuery();
-			if (set.next()) {
-				if (set.getString(9).equals(password)) {
-					System.out.println("LogIn Successful");
-					visitor = new Visitor();
-					visitor.setId(set.getInt(1));
-					visitor.setName(set.getString(2));
-					visitor.setEmail(set.getString(3));
-					visitor.setPhone(set.getString(4));
-					visitor.setGender(set.getString(5));
-					visitor.setDob(set.getDate(6));
-					visitor.setAge(set.getInt(7));
-					visitor.setAddress(set.getString(8));
-					visitor.setPassword(set.getString(9));
-				} else {
-					System.out.println("LogIn Failed");
-				}
-			} else {
-				System.out.println("No User found having this email");
+		Visitor visitor = new Visitor();
+		Visitor temp = getVisitorByEmail(email);
+		if (temp != null) {
+			if (temp.getPassword().equals(password)) {
+				visitor = temp;
 			}
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return visitor;
 	}
+
+//	public Visitor dummylogin(String email, String password) {
+//		Connection con = ConnectionUtil.getConnection();
+//		String query = "SELECT * FROM registered_visitor WHERE email=?";
+//		Visitor visitor = null;
+//		try {
+//			PreparedStatement ps = con.prepareStatement(query);
+//			ps.setString(1, email);
+//			ResultSet set = ps.executeQuery();
+//			if (set.next()) {
+//				if (set.getString(9).equals(password)) {
+//					System.out.println("LogIn Successful");
+//					visitor = new Visitor();
+//					visitor.setId(set.getInt(1));
+//					visitor.setName(set.getString(2));
+//					visitor.setEmail(set.getString(3));
+//					visitor.setPhone(set.getString(4));
+//					visitor.setGender(set.getString(5));
+//					visitor.setDob(set.getDate(6));
+//					visitor.setAge(set.getInt(7));
+//					visitor.setAddress(set.getString(8));
+//					visitor.setPassword(set.getString(9));
+//				} else {
+//					System.out.println("LogIn Failed");
+//				}
+//			} else {
+//				System.out.println("No User found having this email");
+//			}
+//			con.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return visitor;
+//	}
 
 }

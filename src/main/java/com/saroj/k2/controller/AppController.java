@@ -1,5 +1,9 @@
 package com.saroj.k2.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
+import com.saroj.k2.DTO.Visitor;
 import com.saroj.k2.service.VisitorService;
 import com.saroj.k2.service.VisitorServiceImplemented;
 
@@ -15,13 +19,27 @@ public class AppController {
 //		visitor2.setPhone("00000000");
 //		visitor2.setAddress("j2ee");
 //		visitor2.setPassword("jhand@8455");
-//		visitor2.setEmail("sss@gmail.com");
+//		visitor2.setEmail("rrr1@gmail.com");
 		
-		System.out.println(service.getVisitorById(8));
-//		System.out.println(service.getVisitorByEmail("saroj@gmail.com"));
-//		System.out.println(service.deleteVisitorById(8));
 //		System.out.println(service.saveVisitor(visitor));
+		
+//		System.out.println(service.updateVisitor(visitor2));
+
+//		System.out.println(service.getVisitorById(8));
+		
+//		System.out.println(service.getVisitorByEmail("chinu@gmail.com"));
+		
+//		System.out.println(service.deleteVisitorByEmail("chinu@gmail.com"));
+		
+//		System.out.println(service.deleteVisitorById(8));
+		
+//		System.out.println(service.visitorLogin("saroj@gmail.com", "saroj@8455"));
+		
 //		service.getAllRegisteredVisitor().forEach(System.out::println);
+		
+//		service.validVisitorSortedByName().forEach(System.out::println);
+		
+//		service.validVisitorSortedByEmail().forEach(System.out::println);
 	}
 }
 

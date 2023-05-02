@@ -34,10 +34,14 @@ public interface AppConstants {
 	String deleteRegisteredVisitorById="DELETE FROM registered_visitor WHERE id=?";
 	String deleteValidVisitorById="DELETE FROM valid_visitor WHERE id=?";
 	
+	String deleteRegisteredVisitorByEmail="DELETE FROM registered_visitor WHERE email=?";
+	String deleteValidVisitorByEmail="DELETE FROM valid_visitor WHERE email=?";
+	
 	String selectAllRegistered="SELECT * FROM registered_visitor";
 	String selectAllValid="SELECT * FROM valid_visitor";
 	
 	String noEmailPresent="Enter a email to update your data";
+	String diffEmailEntered="No data found associated with this email or email not registered";
 	String returnStmInsert=" data registered";
 	String returnStmUpdate=" row data updated";
 	String retNull="No data updated";

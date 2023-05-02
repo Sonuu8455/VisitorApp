@@ -12,33 +12,35 @@ public class AppController {
 	public static void main(String[] args) {
 		VisitorService service = new VisitorServiceImplemented();
 		
-//		Date dob=Date.valueOf(LocalDate.of(1995, 02, 26));
-//		Visitor visitor = new Visitor(8, "chinu", "chinu@gmail.com", "9853269909", "female", dob, null, " bhadrak", "chinu@8455");
+		Date dob=Date.valueOf(LocalDate.of(2001, 04, 03));
+		Visitor visitor = new Visitor(5, "maanu", "maanu@gmail.com", "7377494979", "female", dob, null, "jajpur", "maanu@8455");
 //		Visitor visitor2=new Visitor();
 //		visitor2.setName("hhhhhuhsdufhh");
 //		visitor2.setPhone("00000000");
 //		visitor2.setAddress("j2ee");
 //		visitor2.setPassword("jhand@8455");
 //		visitor2.setEmail("rrr1@gmail.com");
-		
-//		System.out.println(service.saveVisitor(visitor));
-		
+//		
+		System.out.println(service.saveVisitor(visitor));
+//		
 //		System.out.println(service.updateVisitor(visitor2));
-
+//
 //		System.out.println(service.getVisitorById(8));
-		
+//		
 //		System.out.println(service.getVisitorByEmail("chinu@gmail.com"));
-		
+//		
 //		System.out.println(service.deleteVisitorByEmail("chinu@gmail.com"));
-		
+//		
 //		System.out.println(service.deleteVisitorById(8));
-		
-//		System.out.println(service.visitorLogin("saroj@gmail.com", "saroj@8455"));
-		
+//		
+//		System.out.println(service.visitorLogin("chinu@gmail.com", "chinu@8455"));
+//		
 //		service.getAllRegisteredVisitor().forEach(System.out::println);
-		
+//		
+//		service.getAllValidVisitor().forEach(System.out::println);
+//		
 //		service.validVisitorSortedByName().forEach(System.out::println);
-		
+//		
 //		service.validVisitorSortedByEmail().forEach(System.out::println);
 	}
 }

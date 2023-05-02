@@ -20,11 +20,7 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public String saveVisitor(Visitor visitor) {
-		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
-		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
-		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
-		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
-
+		visitor = encryptVisitor(visitor);
 		int age = calculateAge(visitor.getDob());
 		visitor.setAge(age);
 		String msg = dao.saveRegisteredVisitor(visitor);
@@ -40,14 +36,11 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public String updateVisitor(Visitor visitor) {
-		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
-		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
-		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
-		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
-		if (visitor.getEmail()==null) {
+		visitor = encryptVisitor(visitor);
+		if (visitor.getEmail() == null) {
 			return AppConstants.noEmailPresent;
 		}
-		if (dao.getVisitorByEmail(visitor.getEmail())==null) {
+		if (dao.getVisitorByEmail(visitor.getEmail()) == null) {
 			return AppConstants.diffEmailEntered;
 		}
 		String msg = dao.updateRegisteredVisitor(visitor);
@@ -60,20 +53,14 @@ public class VisitorServiceImplemented implements VisitorService {
 	@Override
 	public Visitor getVisitorById(int id) {
 		Visitor visitor = dao.getVisitorById(id);
-		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
-		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
-		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
-		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		visitor = decryptVisitor(visitor);
 		return visitor;
 	}
 
 	@Override
 	public Visitor getVisitorByEmail(String email) {
 		Visitor visitor = dao.getVisitorByEmail(AES.encrypt(email, AppConstants.SECRET_KEY));
-		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
-		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
-		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
-		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		visitor = decryptVisitor(visitor);
 		return visitor;
 	}
 
@@ -86,10 +73,7 @@ public class VisitorServiceImplemented implements VisitorService {
 				dao.deleteValidVisitorById(id);
 			}
 		}
-		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
-		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
-		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
-		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
+		visitor = decryptVisitor(visitor);
 		return visitor;
 	}
 
@@ -103,29 +87,37 @@ public class VisitorServiceImplemented implements VisitorService {
 				dao.deleteValidVisitorByEmail(enEmail);
 			}
 		}
+		visitor = decryptVisitor(visitor);
 		return visitor;
 	}
 
 	@Override
 	public List<Visitor> getAllRegisteredVisitor() {
-		return dao.getAllRegisteredVisitor();
+		List<Visitor> registeredVisitor = dao.getAllRegisteredVisitor();
+		List<Visitor> listVisitor = registeredVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		return listVisitor;
 	}
 
 	@Override
 	public List<Visitor> getAllValidVisitor() {
-		return dao.getAllValidVisitor();
+		List<Visitor> validVisitor = dao.getAllValidVisitor();
+		List<Visitor> listVisitor = validVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		return listVisitor;
 	}
 
 	@Override
 	public Visitor visitorLogin(String email, String password) {
-		Visitor visitor = dao.visitorLogin(email, password);
+		Visitor visitor = dao.visitorLogin(AES.encrypt(email, AppConstants.SECRET_KEY),
+				AES.encrypt(password, AppConstants.SECRET_KEY));
+		visitor = decryptVisitor(visitor);
 		return visitor;
 	}
 
 	@Override
 	public List<Visitor> validVisitorSortedByName() {
 		List<Visitor> allValidVisitor = dao.getAllValidVisitor();
-		List<Visitor> list = allValidVisitor.stream().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName()))
+		List<Visitor> list2 = allValidVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		List<Visitor> list = list2.stream().sorted((e1, e2) -> e1.getName().compareToIgnoreCase(e2.getName()))
 				.collect(Collectors.toList());
 		return list;
 	}
@@ -133,8 +125,9 @@ public class VisitorServiceImplemented implements VisitorService {
 	@Override
 	public List<Visitor> validVisitorSortedByEmail() {
 		List<Visitor> allValidVisitor = dao.getAllValidVisitor();
-		List<Visitor> list = allValidVisitor.stream()
-				.sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail())).collect(Collectors.toList());
+		List<Visitor> list2 = allValidVisitor.stream().map(e -> decryptVisitor(e)).collect(Collectors.toList());
+		List<Visitor> list = list2.stream().sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail()))
+				.collect(Collectors.toList());
 		return list;
 	}
 
@@ -153,22 +146,22 @@ public class VisitorServiceImplemented implements VisitorService {
 				.sorted((e1, e2) -> e1.getEmail().compareToIgnoreCase(e2.getEmail())).collect(Collectors.toList());
 		return list;
 	}
-	
+
 	private Visitor decryptVisitor(Visitor visitor) {
 		visitor.setEmail(AES.decrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
 		visitor.setPhone(AES.decrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
 		visitor.setAddress(AES.decrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
 		visitor.setPassword(AES.decrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
-		
+
 		return visitor;
 	}
-	
+
 	private Visitor encryptVisitor(Visitor visitor) {
 		visitor.setEmail(AES.encrypt(visitor.getEmail(), AppConstants.SECRET_KEY));
 		visitor.setPhone(AES.encrypt(visitor.getPhone(), AppConstants.SECRET_KEY));
 		visitor.setAddress(AES.encrypt(visitor.getAddress(), AppConstants.SECRET_KEY));
 		visitor.setPassword(AES.encrypt(visitor.getPassword(), AppConstants.SECRET_KEY));
-		
+
 		return visitor;
 	}
 

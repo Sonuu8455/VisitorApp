@@ -7,7 +7,7 @@ public interface AppConstants {
 	String USER_NAME = "root";
 	String PASSWORD = "root";
 	
-	String SECRET_KEY="1as%sdjds!@@!@()&*&^&^?<";//This is used to encrypt or decrypt information.
+	String SECRET_KEY="s@#GDK^*<AD%()?>$#@JGAD)?@&";//This is used to encrypt or decrypt information.
 	
 	String registeredVisitorInsertQuery = "INSERT INTO registered_visitor VALUES (?,?,?,?,?,?,?,?,?)";
 	

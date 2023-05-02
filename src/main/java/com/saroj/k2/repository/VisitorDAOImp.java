@@ -184,10 +184,9 @@ public class VisitorDAOImp implements VisitorDAO {
 	@Override
 	public Visitor getVisitorById(int id) {
 		Connection con = ConnectionUtil.getConnection();
-		String query = "SELECT * FROM registered_visitor WHERE id=?";
 		Visitor visitor = null;
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(AppConstants.getVisitorById);
 			ps.setInt(1, id);
 			ResultSet set = ps.executeQuery();
 			if (set.next()) {

@@ -39,8 +39,8 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public Visitor getVisitorById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		VisitorDAO dao = new VisitorDAOImp();
+		return dao.getVisitorById(id);
 	}
 
 	@Override
@@ -51,14 +51,14 @@ public class VisitorServiceImplemented implements VisitorService {
 
 	@Override
 	public List<Visitor> getAllRegisteredVisitor() {
-		// TODO Auto-generated method stub
-		return null;
+		VisitorDAO dao = new VisitorDAOImp();
+		return dao.getAllRegisteredVisitor();
 	}
 
 	@Override
 	public List<Visitor> getAllValidVisitor() {
-		// TODO Auto-generated method stub
-		return null;
+		VisitorDAO dao = new VisitorDAOImp();
+		return dao.getAllValidVisitor();
 	}
 
 	@Override

@@ -53,14 +53,19 @@ public class VisitorServiceImplemented implements VisitorService {
 	@Override
 	public Visitor getVisitorById(int id) {
 		Visitor visitor = dao.getVisitorById(id);
-		visitor = decryptVisitor(visitor);
+		if (visitor != null) {
+			visitor = decryptVisitor(visitor);
+		}
 		return visitor;
 	}
 
 	@Override
 	public Visitor getVisitorByEmail(String email) {
 		Visitor visitor = dao.getVisitorByEmail(AES.encrypt(email, AppConstants.SECRET_KEY));
-		visitor = decryptVisitor(visitor);
+		if (visitor != null) {
+			visitor = decryptVisitor(visitor);
+		}
+
 		return visitor;
 	}
 
